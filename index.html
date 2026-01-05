@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCM - Fondamentaux de l'Informatique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            height: 8px;
+            margin-top: 15px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 30px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .question h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 17px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-size: 15px;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            transform: translateX(3px);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #e7f3ff;
+            border-radius: 10px;
+            border-left: 4px solid #2196F3;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result h2 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .question-counter {
+            text-align: center;
+            color: white;
+            margin-top: 10px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 QCM - Fondamentaux de l'Informatique</h1>
+            <p>Chapitre 1 : Identifier les fondamentaux du digital</p>
+            <div class="question-counter">40 questions</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <form id="quizForm">
+                <div class="question">
+                    <h3>1. Quelle est la fonction principale de l'unité centrale de traitement (CPU) ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q1" value="a">Stocker les données de manière permanente</label>
+                        <label class="option"><input type="radio" name="q1" value="b">Exécuter les instructions et effectuer les calculs</label>
+                        <label class="option"><input type="radio" name="q1" value="c">Afficher les informations à l'écran</label>
+                        <label class="option"><input type="radio" name="q1" value="d">Gérer la connexion Internet</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>2. Parmi les éléments suivants, lequel est un périphérique d'entrée ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q2" value="a">Imprimante</label>
+                        <label class="option"><input type="radio" name="q2" value="b">Écran</label>
+                        <label class="option"><input type="radio" name="q2" value="c">Clavier</label>
+                        <label class="option"><input type="radio" name="q2" value="d">Haut-parleur</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>3. Quel type de mémoire est volatile et perd ses données lorsque l'ordinateur est éteint ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q3" value="a">Disque dur</label>
+                        <label class="option"><input type="radio" name="q3" value="b">RAM (Mémoire vive)</label>
+                        <label class="option"><input type="radio" name="q3" value="c">SSD</label>
+                        <label class="option"><input type="radio" name="q3" value="d">ROM</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>4. Qu'est-ce qu'un système d'exploitation ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q4" value="a">Un logiciel de traitement de texte</label>
+                        <label class="option"><input type="radio" name="q4" value="b">Un logiciel qui gère les ressources matérielles et logicielles</label>
+                        <label class="option"><input type="radio" name="q4" value="c">Un navigateur web</label>
+                        <label class="option"><input type="radio" name="q4" value="d">Un antivirus</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>5. Lequel de ces éléments n'est PAS un type d'ordinateur ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q5" value="a">Ordinateur de bureau</label>
+                        <label class="option"><input type="radio" name="q5" value="b">Tablette</label>
+                        <label class="option"><input type="radio" name="q5" value="c">Routeur</label>
+                        <label class="option"><input type="radio" name="q5" value="d">Smartphone</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>6. Quelle unité de mesure est utilisée pour la fréquence du processeur ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q6" value="a">Gigaoctets (GB)</label>
+                        <label class="option"><input type="radio" name="q6" value="b">Gigahertz (GHz)</label>
+                        <label class="option"><input type="radio" name="q6" value="c">Mégapixels (MP)</label>
+                        <label class="option"><input type="radio" name="q6" value="d">Watts (W)</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>7. Quel protocole est principalement utilisé pour la communication sur Internet ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q7" value="a">FTP</label>
+                        <label class="option"><input type="radio" name="q7" value="b">TCP/IP</label>
+                        <label class="option"><input type="radio" name="q7" value="c">SMTP</label>
+                        <label class="option"><input type="radio" name="q7" value="d">USB</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>8. Quelle est la fonction principale de la carte mère ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q8" value="a">Refroidir les composants</label>
+                        <label class="option"><input type="radio" name="q8" value="b">Connecter et permettre la communication entre tous les composants</label>
+                        <label class="option"><input type="radio" name="q8" value="c">Stocker les fichiers</label>
+                        <label class="option"><input type="radio" name="q8" value="d">Afficher les graphiques</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>9. Qu'est-ce qu'un logiciel d'application ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q9" value="a">Un programme qui gère le matériel</label>
+                        <label class="option"><input type="radio" name="q9" value="b">Un programme conçu pour effectuer des tâches spécifiques pour l'utilisateur</label>
+                        <label class="option"><input type="radio" name="q9" value="c">Un système d'exploitation</label>
+                        <label class="option"><input type="radio" name="q9" value="d">Un pilote de périphérique</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>10. Quelle est la différence principale entre un disque dur (HDD) et un SSD ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q10" value="a">Le SSD est plus lent mais moins cher</label>
+                        <label class="option"><input type="radio" name="q10" value="b">Le SSD utilise une mémoire flash sans pièces mobiles</label>
+                        <label class="option"><input type="radio" name="q10" value="c">Le HDD est plus rapide et plus résistant aux chocs</label>
+                        <label class="option"><input type="radio" name="q10" value="d">Il n'y a aucune différence</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>11. Combien d'octets contient un kilooctet (Ko) ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q11" value="a">100 octets</label>
+                        <label class="option"><input type="radio" name="q11" value="b">1000 octets</label>
+                        <label class="option"><input type="radio" name="q11" value="c">1024 octets</label>
+                        <label class="option"><input type="radio" name="q11" value="d">10000 octets</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>12. Quel composant est responsable du traitement graphique dans un ordinateur ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q12" value="a">CPU</label>
+                        <label class="option"><input type="radio" name="q12" value="b">RAM</label>
+                        <label class="option"><input type="radio" name="q12" value="c">GPU (Carte graphique)</label>
+                        <label class="option"><input type="radio" name="q12" value="d">Disque dur</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>13. Quelle est la fonction du BIOS dans un ordinateur ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q13" value="a">Gérer les fichiers utilisateur</label>
+                        <label class="option"><input type="radio" name="q13" value="b">Initialiser le matériel au démarrage</label>
+                        <label class="option"><input type="radio" name="q13" value="c">Protéger contre les virus</label>
+                        <label class="option"><input type="radio" name="q13" value="d">Connecter à Internet</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>14. Parmi ces systèmes d'exploitation, lequel est open source ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q14" value="a">Windows</label>
+                        <label class="option"><input type="radio" name="q14" value="b">macOS</label>
+                        <label class="option"><input type="radio" name="q14" value="c">Linux</label>
+                        <label class="option"><input type="radio" name="q14" value="d">iOS</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>15. Qu'est-ce qu'une adresse IP ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q15" value="a">Un identifiant unique pour un appareil sur un réseau</label>
+                        <label class="option"><input type="radio" name="q15" value="b">Un mot de passe sécurisé</label>
+                        <label class="option"><input type="radio" name="q15" value="c">Un type de virus informatique</label>
+                        <label class="option"><input type="radio" name="q15" value="d">Un logiciel de navigation</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>16. Quel est le rôle de l'alimentation électrique dans un ordinateur ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q16" value="a">Stocker l'électricité</label>
+                        <label class="option"><input type="radio" name="q16" value="b">Convertir le courant alternatif en courant continu</label>
+                        <label class="option"><input type="radio" name="q16" value="c">Refroidir les composants</label>
+                        <label class="option"><input type="radio" name="q16" value="d">Afficher les informations</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>17. Qu'est-ce qu'un bit ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q17" value="a">La plus petite unité d'information (0 ou 1)</label>
+                        <label class="option"><input type="radio" name="q17" value="b">8 octets</label>
+                        <label class="option"><input type="radio" name="q17" value="c">Un type de processeur</label>
+                        <label class="option"><input type="radio" name="q17" value="d">Un périphérique de stockage</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>18. Quelle est la fonction d'un pilote (driver) ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q18" value="a">Protéger contre les virus</label>
+                        <label class="option"><input type="radio" name="q18" value="b">Permettre au système d'exploitation de communiquer avec le matériel</label>
+                        <label class="option"><input type="radio" name="q18" value="c">Accélérer l'ordinateur</label>
+                        <label class="option"><input type="radio" name="q18" value="d">Compresser les fichiers</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>19. Quel périphérique est à la fois d'entrée et de sortie ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q19" value="a">Clavier</label>
+                        <label class="option"><input type="radio" name="q19" value="b">Écran tactile</label>
+                        <label class="option"><input type="radio" name="q19" value="c">Imprimante</label>
+                        <label class="option"><input type="radio" name="q19" value="d">Haut-parleur</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>20. Qu'est-ce que le Cloud Computing ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q20" value="a">Un type de stockage météorologique</label>
+                        <label class="option"><input type="radio" name="q20" value="b">L'accès à des ressources informatiques via Internet</label>
+                        <label class="option"><input type="radio" name="q20" value="c">Un système d'exploitation</label>
+                        <label class="option"><input type="radio" name="q20" value="d">Un type de processeur</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>21. Quelle est la capacité typique d'un DVD standard ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q21" value="a">700 Mo</label>
+                        <label class="option"><input type="radio" name="q21" value="b">1.44 Mo</label>
+                        <label class="option"><input type="radio" name="q21" value="c">4.7 Go</label>
+                        <label class="option"><input type="radio" name="q21" value="d">25 Go</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>22. Qu'est-ce qu'un serveur ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q22" value="a">Un ordinateur personnel</label>
+                        <label class="option"><input type="radio" name="q22" value="b">Un ordinateur qui fournit des services à d'autres ordinateurs</label>
+                        <label class="option"><input type="radio" name="q22" value="c">Un périphérique de stockage</label>
+                        <label class="option"><input type="radio" name="q22" value="d">Un logiciel antivirus</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>23. Quelle est la fonction du cache dans un processeur ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q23" value="a">Stocker des données à long terme</label>
+                        <label class="option"><input type="radio" name="q23" value="b">Stocker temporairement des données fréquemment utilisées</label>
+                        <label class="option"><input type="radio" name="q23" value="c">Refroidir le processeur</label>
+                        <label class="option"><input type="radio" name="q23" value="d">Connecter les périphériques</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>24. Qu'est-ce que le HTTP ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q24" value="a">Un langage de programmation</label>
+                        <label class="option"><input type="radio" name="q24" value="b">Un protocole de transfert hypertexte</label>
+                        <label class="option"><input type="radio" name="q24" value="c">Un système d'exploitation</label>
+                        <label class="option"><input type="radio" name="q24" value="d">Un type de virus</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>25. Quel port USB est le plus rapide ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q25" value="a">USB 1.0</label>
+                        <label class="option"><input type="radio" name="q25" value="b">USB 2.0</label>
+                        <label class="option"><input type="radio" name="q25" value="c">USB 3.0</label>
+                        <label class="option"><input type="radio" name="q25" value="d">Tous ont la même vitesse</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>26. Qu'est-ce qu'un firmware ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q26" value="a">Un logiciel de sécurité</label>
+                        <label class="option"><input type="radio" name="q26" value="b">Un logiciel embarqué dans un composant matériel</label>
+                        <label class="option"><input type="radio" name="q26" value="c">Un type de virus</label>
+                        <label class="option"><input type="radio" name="q26" value="d">Un système de fichiers</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>27. Quelle est la fonction d'un routeur ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q27" value="a">Stocker des fichiers</label>
+                        <label class="option"><input type="radio" name="q27" value="b">Diriger le trafic réseau entre différents réseaux</label>
+                        <label class="option"><input type="radio" name="q27" value="c">Imprimer des documents</label>
+                        <label class="option"><input type="radio" name="q27" value="d">Scanner des documents</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>28. Qu'est-ce que la résolution d'un écran ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q28" value="a">Sa taille en pouces</label>
+                        <label class="option"><input type="radio" name="q28" value="b">Le nombre de pixels en largeur et hauteur</label>
+                        <label class="option"><input type="radio" name="q28" value="c">Sa luminosité</label>
+                        <label class="option"><input type="radio" name="q28" value="d">Sa fréquence de rafraîchissement</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>29. Quel est le rôle du système de fichiers ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q29" value="a">Protéger contre les virus</label>
+                        <label class="option"><input type="radio" name="q29" value="b">Organiser et gérer les fichiers sur un support de stockage</label>
+                        <label class="option"><input type="radio" name="q29" value="c">Accélérer le processeur</label>
+                        <label class="option"><input type="radio" name="q29" value="d">Afficher les images</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>30. Qu'est-ce qu'un périphérique de sortie ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q30" value="a">Un appareil qui envoie des données à l'ordinateur</label>
+                        <label class="option"><input type="radio" name="q30" value="b">Un appareil qui reçoit des données de l'ordinateur</label>
+                        <label class="option"><input type="radio" name="q30" value="c">Un appareil de stockage</label>
+                        <label class="option"><input type="radio" name="q30" value="d">Un composant interne</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>31. Quelle est la différence entre logiciel libre et logiciel propriétaire ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q31" value="a">Le prix</label>
+                        <label class="option"><input type="radio" name="q31" value="b">L'accès au code source et les libertés d'utilisation</label>
+                        <label class="option"><input type="radio" name="q31" value="c">La qualité</label>
+                        <label class="option"><input type="radio" name="q31" value="d">La vitesse d'exécution</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>32. Qu'est-ce que le multitâche dans un système d'exploitation ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q32" value="a">Utiliser plusieurs écrans</label>
+                        <label class="option"><input type="radio" name="q32" value="b">Exécuter plusieurs programmes simultanément</label>
+                        <label class="option"><input type="radio" name="q32" value="c">Avoir plusieurs utilisateurs</label>
+                        <label class="option"><input type="radio" name="q32" value="d">Connecter plusieurs périphériques</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>33. Quel composant détermine le nombre de périphériques que vous pouvez connecter ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q33" value="a">Le processeur</label>
+                        <label class="option"><input type="radio" name="q33" value="b">Les ports disponibles sur la carte mère</label>
+                        <label class="option"><input type="radio" name="q33" value="c">La RAM</label>
+                        <label class="option"><input type="radio" name="q33" value="d">Le disque dur</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>34. Qu'est-ce qu'un LAN (Local Area Network) ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q34" value="a">Un réseau mondial</label>
+                        <label class="option"><input type="radio" name="q34" value="b">Un réseau local limité géographiquement</label>
+                        <label class="option"><input type="radio" name="q34" value="c">Un système d'exploitation</label>
+                        <label class="option"><input type="radio" name="q34" value="d">Un type de processeur</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>35. Quelle est la fonction du ventilateur dans un ordinateur ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q35" value="a">Produire de l'électricité</label>
+                        <label class="option"><input type="radio" name="q35" value="b">Refroidir les composants pour éviter la surchauffe</label>
+                        <label class="option"><input type="radio" name="q35" value="c">Accélérer le processeur</label>
+                        <label class="option"><input type="radio" name="q35" value="d">Filtrer l'air extérieur</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>36. Qu'est-ce que la bande passante d'un réseau ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q36" value="a">La quantité de données pouvant être transmises dans un temps donné</label>
+                        <label class="option"><input type="radio" name="q36" value="b">La distance maximale d'un câble réseau</label>
+                        <label class="option"><input type="radio" name="q36" value="c">Le nombre d'utilisateurs connectés</label>
+                        <label class="option"><input type="radio" name="q36" value="d">Le prix de l'abonnement Internet</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>37. Quel format d'image est sans perte de qualité ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q37" value="a">JPEG</label>
+                        <label class="option"><input type="radio" name="q37" value="b">PNG</label>
+                        <label class="option"><input type="radio" name="q37" value="c">MP3</label>
+                        <label class="option"><input type="radio" name="q37" value="d">AVI</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>38. Qu'est-ce qu'un système 64 bits par rapport à un système 32 bits ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q38" value="a">Il est deux fois plus rapide</label>
+                        <label class="option"><input type="radio" name="q38" value="b">Il peut gérer plus de RAM et traiter plus de données simultanément</label>
+                        <label class="option"><input type="radio" name="q38" value="c">Il occupe deux fois plus d'espace</label>
+                        <label class="option"><input type="radio" name="q38" value="d">Il coûte deux fois plus cher</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>39. Qu'est-ce qu'un pare-feu (firewall) ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q39" value="a">Un logiciel de compression</label>
+                        <label class="option"><input type="radio" name="q39" value="b">Un système de sécurité qui contrôle le trafic réseau</label>
+                        <label class="option"><input type="radio" name="q39" value="c">Un type de processeur</label>
+                        <label class="option"><input type="radio" name="q39" value="d">Un périphérique de stockage</label>
+                    </div>
+                </div>
+
+                <div class="question">
+                    <h3>40. Quelle est la principale différence entre un ordinateur portable et un ordinateur de bureau ?</h3>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q40" value="a">La puissance de calcul</label>
+                        <label class="option"><input type="radio" name="q40" value="b">La portabilité et l'intégration des composants</label>
+                        <label class="option"><input type="radio" name="q40" value="c">Le système d'exploitation</label>
+                        <label class="option"><input type="radio" name="q40" value="d">Le prix uniquement</label>
+                    </div>
+                </div>
+
+
+                <button type="button" class="submit-btn" id="pdfBtn">
+                    📄 Enregistrer les réponses en PDF
+                </button>
+            </form>
+            </div>
+            </div>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+               
+<script>
+document.getElementById("pdfBtn").addEventListener("click", function () {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let y = 15;
+    doc.setFontSize(14);
+    doc.text("QCM - Fondamentaux de l'Informatique", 10, y);
+    y += 10;
+
+    const questions = document.querySelectorAll(".question");
+
+    questions.forEach((question, index) => {
+        const title = question.querySelector("h3").innerText;
+        const checked = question.querySelector("input[type='radio']:checked");
+
+        doc.setFontSize(11);
+        doc.text(title, 10, y);
+        y += 6;
+
+        if (checked) {
+            const answer = checked.parentElement.innerText;
+            doc.text("Réponse : " + answer, 12, y);
+        } else {
+            doc.text("Réponse : Non répondue", 12, y);
+        }
+
+        y += 8;
+
+        if (y > 270) {
+            doc.addPage();
+            y = 15;
+        }
+    });
+
+    doc.save("reponses_QCM_informatique.pdf");
+});
+</script>
+</body>
+</html>
